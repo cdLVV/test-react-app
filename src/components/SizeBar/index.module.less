@@ -1,13 +1,17 @@
 .index {
   padding: 15px;
 }
+
 .title {
   margin-top: 2px;
   margin-bottom: 20px;
+
   @apply text-lg font-bold;
 }
+
 .sizes {
   @apply flex items-center flex-wrap;
+
   .size {
     display: inline-block;
     position: relative;
@@ -21,17 +25,19 @@
     border-radius: 50%;
     line-height: 35px;
     text-align: center;
-    color: rgb(27, 26, 32);
-    background-color: rgb(236, 236, 236);
+    color: rgb(27 26 32);
+    background-color: rgb(236 236 236);
     border: 1px solid transparent;
   }
+
   .checked {
-    background-color: rgb(27, 26, 32);
-    color: rgb(236, 236, 236);
+    background-color: rgb(27 26 32);
+    color: rgb(236 236 236);
   }
+
   .notChecked {
     &:hover {
-      border: 1px solid rgb(27, 26, 32);
+      border: 1px solid rgb(27 26 32);
     }
   }
 }

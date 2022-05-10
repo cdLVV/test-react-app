@@ -1,3 +1,14 @@
+.btn {
+  background-color: rgb(27 26 32);
+  color: rgb(255 255 255);
+  padding: 15px 0;
+  margin-top: 10px;
+  cursor: pointer;
+  border: 0;
+  transition: background-color 0.2s ease 0s;
+  width: 100%;
+}
+
 .index {
   position: relative;
   text-align: center;
@@ -8,25 +19,31 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
   .bg2 {
     display: none;
   }
+
   &:hover {
     .bg1 {
       display: none;
     }
+
     .bg2 {
       display: block;
     }
+
     .btn {
-      background-color: rgb(234, 191, 0);
+      background-color: rgb(234 191 0);
     }
   }
 }
+
 .bg {
   width: 100%;
   position: relative;
-  background: rgb(238, 238, 238);
+  background: rgb(238 238 238);
+
   & > img {
     object-fit: cover;
     object-position: center center;
@@ -37,70 +54,66 @@
 
 .free {
   position: absolute;
-  color: rgb(236, 236, 236);
+  color: rgb(236 236 236);
   top: 10px;
   right: 10px;
   padding: 5px;
   font-size: 0.6em;
-  background-color: rgb(27, 26, 32);
+  background-color: rgb(27 26 32);
   cursor: default;
   z-index: 1;
 }
 
 .title {
   position: relative;
-  padding: 0px 20px;
+  padding: 0 20px;
   height: 45px;
   margin: 20px 0;
+
   &::before {
     content: "";
     width: 20px;
     height: 2px;
-    background-color: rgb(234, 191, 0);
+    background-color: rgb(234 191 0);
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
     left: 50%;
     margin-left: -10px;
   }
 }
+
 .price {
   @apply text-sm;
+
   .num1 {
     @apply text-xl font-bold;
+
     margin-left: 5px;
   }
+
   .num2 {
     @apply text-base;
   }
 }
+
 .installments {
-  color: rgb(156, 155, 155);
+  color: rgb(156 155 155);
+
   & > span {
     font-weight: bold;
   }
 }
+
 .grow {
   flex: 1;
 }
-.btn {
-  background-color: rgb(27, 26, 32);
-  color: rgb(255, 255, 255);
-  padding: 15px 0px;
-  margin-top: 10px;
-  cursor: pointer;
-  border: 0px;
-  transition: background-color 0.2s ease 0s;
-  width: 100%;
-  //   position: absolute;
-  //   bottom: 10px;
-  //   left: 10px;
-  //   right: 10px;
-}
+
 .availableSizes {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   justify-content: center;
+
   & > span {
     margin-left: 10px;
     padding: 5px 10px;
