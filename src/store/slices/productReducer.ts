@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { getProducts, Product, Size } from "@/api/shop";
 import {
   createSlice,
