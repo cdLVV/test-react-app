@@ -49,7 +49,8 @@ const getCSSLoader = ({ less = false, modules }) => {
             require("postcss-preset-env")({
               autoprefixer: { grid: true },
             }),
-          ].filter(Boolean),
+            require("tailwindcss"),
+          ],
         },
         sourceMap: isDev,
       },
@@ -100,10 +101,8 @@ const getScriptLoader = ({ isTs = false }) => {
         runtime: "automatic",
       },
     ],
-  ];
-  if (isTs) {
-    presets.push(["@babel/preset-typescript"]);
-  }
+    isTs && ["@babel/preset-typescript"],
+  ].filter(Boolean);
   return {
     loader: require.resolve("babel-loader"),
     options: {
