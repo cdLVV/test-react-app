@@ -28,31 +28,47 @@ export interface ProductState {
   allSize: Size[];
   allProducts: ProductItem[];
   loading: boolean;
+  sort: string;
 }
 const PUBLIC_URL = process.env.PUBLIC_URL;
 
+const sortList = (list: ProductItem[], sort?: string) => {
+  switch (sort) {
+    case "priceUp":
+      return list.sort((a, b) => a.price - b.price);
+    case "priceDown":
+      return list.sort((a, b) => b.price - a.price);
+
+    default:
+      return list;
+  }
+};
 export const requestProducts = createAsyncThunk(
   `product/requestProducts`,
   //发出一个请求，这里用的是axios
   // async (params) => await services.testApi(params),
-  async (sizes: Set<Size>) => {
+  async (params: { sizes: Set<Size>; sort?: string }) => {
     const res = await getProducts();
+    const { sizes, sort } = params;
 
     return new Promise<ProductItem[]>((resolve) => {
       setTimeout(() => {
         resolve(
-          res.data.products
-            .filter(
-              (item) =>
-                sizes.size === 0 || intersection(sizes, item.availableSizes)
-            )
-            .map(({ sku, availableSizes, ...rest }) => ({
-              ...rest,
-              img1: `${PUBLIC_URL}/shop-static/products/${sku}-1-product.webp`,
-              img2: `${PUBLIC_URL}/shop-static/products/${sku}-2-product.webp`,
-              sku,
-              availableSizes: Array.from(new Set(availableSizes)),
-            }))
+          sortList(
+            res.data.products
+              .filter(
+                (item) =>
+                  sizes.size === 0 || intersection(sizes, item.availableSizes)
+              )
+              .map(({ sku, availableSizes, ...rest }) => ({
+                ...rest,
+                img1: `${PUBLIC_URL}/shop-static/products/${sku}-1-product.webp`,
+                img2: `${PUBLIC_URL}/shop-static/products/${sku}-2-product.webp`,
+                sku,
+                availableSizes: Array.from(new Set(availableSizes)),
+              })),
+            sort
+          )
         );
       }, 1000);
     });
@@ -83,19 +99,23 @@ export const productSlice = createSlice<
     products: [],
     allProducts: [],
     loading: false,
+    sort: "",
   },
   reducers: {
     // setAllProducts: (state, { payload }) => {
     //   state.allProducts = payload;
     // },
     setSizes: (state, action) => {
-      console.log({ action });
       const { payload } = action;
       if (state.sizes.has(payload)) {
         state.sizes.delete(payload);
       } else {
         state.sizes.add(payload);
       }
+    },
+    setSort: (state, action) => {
+      const { payload } = action;
+      state.sort = payload;
     },
   },
   extraReducers: (builder) => {
@@ -115,4 +135,4 @@ export const productSlice = createSlice<
 });
 
 // 导出actions
-export const { setSizes } = productSlice.actions;
+export const { setSizes, setSort } = productSlice.actions;

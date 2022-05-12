@@ -1,17 +1,19 @@
 import { Modal } from "antd";
 import classNames from "classnames";
 import { memo, useCallback } from "react";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch } from "@/store/hooks";
 import {
   addProduct,
   ShopCartState,
   subtractProduct,
   subtractQuantity,
   deleteAll,
-} from "../../store/slices/shopCartReducer";
-import { formatPrice } from "../../utils";
+  changePruductNumber,
+} from "@/store/slices/shopCartReducer";
+import { formatPrice } from "@/utils";
 import CartButton from "../CartButton";
 import styles from "./index.module.less";
+import NumericInput from "./NumericInput ";
 
 interface Props {
   list: ShopCartState["carts"];
@@ -62,40 +64,46 @@ function CartPanel(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleAddProduct = useCallback((item: any) => {
-    dispatch(addProduct(item));
+    dispatch(addProduct({ item, size: item.size }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const handleChangePruductNumber = useCallback(
+    (item: any) => (quantity: number) =>
+      dispatch(changePruductNumber({ item, quantity })),
+    [dispatch]
+  );
   return (
-    <div
-      className={classNames(styles.cartBtn, {
-        [styles.show]: isExpand,
-      })}
-    >
-      <CartButton
-        className={styles.cartButton}
-        count={count}
-        onClick={onExpand}
-      />
-      <button className={styles.closeBtn} onClick={onClose}>
-        X
-      </button>
-      <main className={styles.content}>
-        <div className={styles.cartButton2Wrap}>
+    <>
+      {isExpand && <div className={styles.mask} />}
+      <div
+        className={classNames(styles.cartBtn, {
+          [styles.show]: isExpand,
+        })}
+      >
+        <CartButton
+          className={styles.cartButton}
+          count={count}
+          onClick={onExpand}
+        />
+        <button className={styles.closeBtn} onClick={onClose}>
+          X
+        </button>
+        <header className={styles.header}>
           <CartButton
             className={styles.cartButton2}
             count={count}
             onClick={onExpand}
           />
           <span>Cart</span>
-        </div>
-        <div className={styles.cartList}>
+        </header>
+        <main className={styles.cartList}>
           {list.map((item) => (
-            <div key={item.sku} className={styles.cartItem}>
+            <div key={`${item.sku}-${item.size}`} className={styles.cartItem}>
               <img className={styles.img} src={item.img1} alt={item.title} />
               <div className={styles.desc}>
                 <div>{item.title}</div>
                 <div>
-                  {`${item.availableSizes[0]} | ${item.style}`} <br />
+                  {`${item.size} | ${item.style}`} <br />
                   Quantity: {item.quantity}
                 </div>
               </div>
@@ -111,6 +119,10 @@ function CartPanel(props: Props) {
                   >
                     -
                   </button>
+                  <NumericInput
+                    value={item.quantity}
+                    onChange={handleChangePruductNumber(item)}
+                  />
                   <button
                     className={styles.btn}
                     onClick={() => handleAddProduct(item)}
@@ -131,33 +143,33 @@ function CartPanel(props: Props) {
               :)
             </div>
           )}
-        </div>
-      </main>
-      <div className={styles.panelBottom}>
-        <div className={styles.textWrap}>
-          <div className={styles.text}>SUBTOTAL</div>
-          <div className={styles.price}>
-            <div className={styles.first}>{`$  ${formatPrice(
-              totalPrice || 0
-            )}`}</div>
-            {!!totalInstallments && (
-              <div className={styles.last}>
-                {`OR UP TO ${totalInstallments} x ${totalCurrencyFormat} ${formatPrice(
-                  totalPrice / totalInstallments
-                )}`}
-              </div>
-            )}
+        </main>
+        <div className={styles.panelBottom}>
+          <div className={styles.textWrap}>
+            <div className={styles.text}>SUBTOTAL</div>
+            <div className={styles.price}>
+              <div className={styles.first}>{`$  ${formatPrice(
+                totalPrice || 0
+              )}`}</div>
+              {!!totalInstallments && (
+                <div className={styles.last}>
+                  {`OR UP TO ${totalInstallments} x ${totalCurrencyFormat} ${formatPrice(
+                    totalPrice / totalInstallments
+                  )}`}
+                </div>
+              )}
+            </div>
           </div>
+          <button
+            className={styles.checkBtn}
+            disabled={!count}
+            onClick={handleClearAll}
+          >
+            Checkout
+          </button>
         </div>
-        <button
-          className={styles.checkBtn}
-          disabled={!count}
-          onClick={handleClearAll}
-        >
-          Checkout
-        </button>
       </div>
-    </div>
+    </>
   );
 }
 

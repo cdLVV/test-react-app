@@ -3,6 +3,7 @@ import {
   ProductItem,
   requestProducts,
   setSizes,
+  setSort,
 } from "./store/slices/productReducer";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import Loader from "./components/Loader";
@@ -12,31 +13,57 @@ import Products from "./components/Products";
 import styles from "./App.module.less";
 import { addProduct } from "./store/slices/shopCartReducer";
 import CartPanel from "./components/CartPanel";
+import { fixedBody, looseBody } from "./utils";
+import { Drawer } from "antd";
 
 export default function App() {
   const { shopCart, product } = useAppSelector((state) => state);
-  const { loading, products, sizes, allSize } = product;
+  const { loading, products, sizes, allSize, sort } = product;
   const { carts, count, totalPrice, totalCurrencyFormat, totalInstallments } =
     shopCart;
   const [isExpand, setIsExpand] = useState(false);
+  const [curProduct, setCurProduct] = useState<ProductItem>();
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(requestProducts(sizes));
-  }, [dispatch, sizes]);
+    dispatch(requestProducts({ sizes, sort }));
+  }, [dispatch, sizes, sort]);
 
   const handleSizeChange = useCallback((size: Size) => {
     dispatch(setSizes(size));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleAddToCart = useCallback((item: ProductItem) => {
-    dispatch(addProduct(item));
-    setIsExpand(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // dispatch(addProduct(item));
+    setCurProduct(item);
   }, []);
-  const handleClose = useCallback(() => setIsExpand(false), []);
-  const handleExpand = useCallback(() => setIsExpand(true), []);
+  const handleChooseSize = useCallback(
+    (e: any) => {
+      const { size } = e.target.dataset;
+
+      if (size) {
+        dispatch(addProduct({ item: curProduct, size }));
+        setCurProduct(undefined);
+      }
+    },
+    [curProduct, dispatch]
+  );
+  const handleClose = useCallback(() => {
+    setIsExpand(false);
+    looseBody();
+  }, []);
+  const handleExpand = useCallback(() => {
+    setIsExpand(true);
+    fixedBody();
+  }, []);
+  const handleSortChange = useCallback(
+    (val: string) => {
+      dispatch(setSort(val));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [sizes]
+  );
 
   return (
     <div className={styles.app}>
@@ -50,6 +77,8 @@ export default function App() {
         className={styles.products}
         list={products}
         onAddToCart={handleAddToCart}
+        onSortChange={handleSortChange}
+        sort={sort}
       />
       <CartPanel
         isExpand={isExpand}
@@ -61,6 +90,23 @@ export default function App() {
         totalInstallments={totalInstallments}
         list={carts}
       />
+      <Drawer
+        title={
+          <div className="text-center font-bold text-lg">请选择样式大小</div>
+        }
+        placement="bottom"
+        closable={false}
+        visible={!!curProduct}
+        onClose={() => setCurProduct(undefined)}
+      >
+        <div className={styles.sizes} onClick={handleChooseSize}>
+          {curProduct?.availableSizes.map((item) => (
+            <div key={item} data-size={item}>
+              {item}
+            </div>
+          ))}
+        </div>
+      </Drawer>
     </div>
   );
 }

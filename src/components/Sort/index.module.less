@@ -1,0 +1,39 @@
+.index {
+  .btn {
+    @apply font-bold;
+
+    i {
+      padding-left: 10px;
+    }
+  }
+}
+
+.sorts {
+  .sort {
+    color: #666;
+    cursor: pointer;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: normal;
+    letter-spacing: 1px;
+    text-align: center;
+    text-transform: uppercase;
+    user-select: none;
+    white-space: nowrap;
+    height: 45px;
+    line-height: 45px;
+    width: 230px;
+  }
+
+  .checked {
+    color: #454545;
+    font-weight: bold;
+  }
+
+  .notChecked {
+    &:hover {
+      color: #454545;
+      font-weight: bold;
+    }
+  }
+}
