@@ -10,7 +10,7 @@ module.exports = {
     "at-rule-no-unknown": null,
     "selector-pseudo-class-no-unknown": [
       true,
-      { ignorePseudoClasses: ["global"] },
+      { ignorePseudoClasses: ["global", "local", "export"] },
     ],
   },
   // customSyntax: require("postcss-less"),

@@ -15,6 +15,10 @@ import { addProduct } from "./store/slices/shopCartReducer";
 import CartPanel from "./components/CartPanel";
 import { fixedBody, looseBody } from "./utils";
 import { Drawer } from "antd";
+import styles2 from "./variables.less";
+
+console.log({ styles2 });
+console.log({ styles });
 
 export default function App() {
   const { shopCart, product } = useAppSelector((state) => state);
