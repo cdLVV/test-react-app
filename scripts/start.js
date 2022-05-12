@@ -2,19 +2,21 @@ process.on("unhandledRejection", (err) => {
   throw err;
 });
 
-process.env.BABEL_ENV = 'development';
-process.env.NODE_ENV = 'development';
+process.env.BABEL_ENV = "development";
+process.env.NODE_ENV = "development";
+
+const chalk = require("chalk");
 
 const webpack = require("webpack");
 const WebpackDevServer = require("webpack-dev-server");
 const clearConsole = require("react-dev-utils/clearConsole");
 const formatMessages = require("react-dev-utils/formatWebpackMessages");
-const chalk = require("chalk");
 const { prepareUrls } = require("react-dev-utils/WebpackDevServerUtils");
+const openBrowser = require("react-dev-utils/openBrowser");
 
-const webpackConfig = require("../webpack.config");
+const webpackConfig = require("../config/webpack.config");
 const port = webpackConfig.devServer.port;
-const host = webpackConfig.devServer.host;
+// const host = webpackConfig.devServer.host;
 const compiler = webpack(webpackConfig);
 
 let isFirstCompile = true;
@@ -34,39 +36,35 @@ compiler.hooks.done.tap("done", (stats) => {
       isFirstCompile = false;
     } else {
       console.log(chalk.cyan(`编译成功\n`));
+      console.log(messages);
     }
 
     return;
   }
 
-  if (messages.errors.length) {
-    console.log(chalk.cyan(`❌ 发生错误，编译失败.\n`));
-    messages.errors.forEach((e) => console.log(e));
+  // if (messages.errors.length) {
+  //   console.log(chalk.cyan(`❌ 发生错误，编译失败.\n`));
+  //   messages.errors.forEach((e) => console.log(e));
 
-    return;
-  }
+  //   return;
+  // }
 
-  if (messages.warnings.length) {
-    console.log(chalk.cyan(`⚠️ 发生警告，信息如下.\n`));
-    messages.warnings.forEach((w) => console.log(w));
-  }
+  // if (messages.warnings.length) {
+  //   console.log(chalk.cyan(`⚠️ 发生警告，信息如下.\n`));
+  //   messages.warnings.forEach((w) => console.log(w));
+  // }
 });
-const devServer = new WebpackDevServer(
-  compiler,
-  webpackConfig.devServer
-).listen(port, host, (err) => {
-  if (err) {
-    console.log(chalk.red(err));
+const devServerOptions = { ...webpackConfig.devServer };
+const devServer = new WebpackDevServer(devServerOptions, compiler);
 
-    process.exit(1);
-  }
-
-  console.log("");
-});
-
-const urls = prepareUrls("http://", host, port);
+const urls = prepareUrls("http", 'localhost', port);
 
 devServer.startCallback(() => {
   console.log(chalk.cyan("Starting the development server...\n"));
   openBrowser(urls.localUrlForBrowser);
+  // open(urls.localUrlForBrowser)
+  //   .then((r) => console.log({ r }))
+  //   .catch((e) => {
+  //     console.log({ e });
+  //   });
 });

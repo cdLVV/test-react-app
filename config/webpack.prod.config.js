@@ -3,7 +3,7 @@ const getProdConfig = (env) => {
   const config = getBaseConfig(env);
 
   config.mode = "production";
-  config.devtool = "hidden-source-map";
+  config.devtool = false;
 
   config.optimization = {
     ...config.optimization,

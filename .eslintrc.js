@@ -9,6 +9,7 @@ module.exports = {
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:react/jsx-runtime",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -19,14 +20,17 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["react", "react-hooks", "@typescript-eslint"],
-  //   overrides: [
-  //     {
-  //       files: ["src/**/*.js", "src/**/*.ts", "src/**/*.tsx", "src/**/*.jsx"],
-  //       excludedFiles: "config",
-  //     },
-  //   ],
+  settings: {
+    flowtype: {
+      onlyFilesWithFlowAnnotation: true
+    },
+    react: {
+      pragma: 'React', // FWIW, I tried without as well.
+      version: '18.1.0', // Tried with explicit version number as well.
+    }
+  },
   rules: {
-    "react/react-in-jsx-scope": 0,
+    // "react/react-in-jsx-scope": 0,
     "@typescript-eslint/ban-types": 0,
     "@typescript-eslint/ban-ts-comment": 0,
     "@typescript-eslint/no-explicit-any": 0,

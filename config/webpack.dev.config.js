@@ -8,7 +8,10 @@ const getDevConfig = (env) => {
 
   config.mode = "development";
   config.devtool = "cheap-module-source-map";
+  // config.stats = "errors-warnings";
+  config.stats = {};
 
+  console.log({publicUrlOrPath: paths.publicUrlOrPath});
   let port = getAppPort();
 
   config.devServer = {
@@ -21,7 +24,8 @@ const getDevConfig = (env) => {
       "Access-Control-Allow-Methods": "*",
       "Access-Control-Allow-Headers": "*",
     },
-    host: "localhost",
+    allowedHosts: 'auto',
+    host: "127.0.0.1",
     client: {
       overlay: {
         errors: true,
@@ -30,6 +34,10 @@ const getDevConfig = (env) => {
     },
     static: {
       directory: paths.appPublic,
+      publicPath: [paths.publicUrlOrPath],
+    },
+    devMiddleware: {
+      publicPath: paths.publicUrlOrPath.slice(0, -1),
     },
   };
 

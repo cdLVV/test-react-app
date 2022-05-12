@@ -1,6 +1,6 @@
 module.exports = {
-  purge: ["./src/**/*.tsx"],
-  content: [],
+  // purge: ["./src/**/*.tsx"],
+  content: ["./src/**/*.{jsx,tsx,html}"],
   theme: {
     extend: {},
     color: {
@@ -8,7 +8,7 @@ module.exports = {
     },
     ringColor: {
       primary: "#006fb0",
-    }
+    },
   },
   plugins: [],
 };

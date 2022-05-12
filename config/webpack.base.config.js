@@ -118,8 +118,8 @@ const getScriptLoader = ({ isTs = false }) => {
   };
 };
 module.exports = (env) => ({
-  mode: isDev ? "development" : "production",
-  devtool: isDev ? "cheap-module-source-map" : "hidden-source-map",
+  // mode: isDev ? "development" : "production",
+  // devtool: isDev ? "cheap-module-source-map" : "hidden-source-map",
   entry: {
     // index: "./src/index",
     index: {
@@ -238,7 +238,8 @@ module.exports = (env) => ({
     ],
   },
   plugins: [
-    existsSync(paths.appPublic) &&
+    !isDev &&
+      existsSync(paths.appPublic) &&
       new CopyPlugin({
         patterns: [
           {

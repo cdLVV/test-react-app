@@ -4,6 +4,7 @@ process.on("unhandledRejection", (err) => {
 
 process.env.BABEL_ENV = 'production';
 process.env.NODE_ENV = 'production';
+// process.env.ANALYZER = '1';
 
 const webpack = require("webpack");
 const chalk = require("chalk");
@@ -13,7 +14,7 @@ clearConsole();
 
 const startTime = Date.now();
 
-const webpackConfig = require("../webpack.config");
+const webpackConfig = require("../config/webpack.config");
 
 webpack(webpackConfig).run((err, stats) => {
   if (err) {
