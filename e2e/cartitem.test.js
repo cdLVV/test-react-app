@@ -45,6 +45,14 @@ const CART_LIST = ".cart_panel-cartList";
 const CART_ITEM = ".cart_panel-cartList > .cart_panel-cartItem";
 const CHECKOUT_BTN = ".cart_panel-checkBtn";
 
+/**
+ * 获取当前购物车的第n个的商品元素
+ * @param {number} index
+ * @returns string
+ */
+const getCartItem = (index) =>
+  `.cart_panel-cartList > .cart_panel-cartItem:nth-child(${index})`;
+
 const createWaitFor = (fn, page) => {
   const returnFn = async function (...args) {
     console.log(`${fn} is beginning`, args[0]);
@@ -71,6 +79,12 @@ describe(
       await page.click(prudoct);
       await myPage.waitForSelector(size);
       await page.click(size);
+      await sleep(200);
+    };
+
+    const delSomePruductToCart = async ({ index }) => {
+      const prudoct = getPruductAddToCartBtn(index);
+      await sleep(200);
     };
 
     const openCartPanel = async () => {
@@ -80,6 +94,7 @@ describe(
       // await page.click(SHOW_CART_BTN);
       await myPage.waitForSelector(SHOW_CART_BTN, { hidden: true });
       await myPage.waitForSelector(HIDDEN_CART_BTN);
+      await sleep(200);
     };
 
     beforeAll(async () => {
@@ -113,99 +128,49 @@ describe(
       await browser.close();
     });
 
-    // test("aaa", async () => {}, timeout);
+    const expectCart = async ({ index, children, total }) => {
+      const arr = await page.$$(CART_ITEM);
+      expect(arr.length).toBe(children);
+      const countEle = await page.$("#shopping-cart-count");
+      const pre = await page.evaluate((ele) => Number(ele.innerHTML), countEle);
+      expect(pre).toBe(total);
+    };
 
     test(
-      "add to cart",
+      "test cart",
       async () => {
-        let countEle = await page.$("#shopping-cart-count");
-        const pre = await page.evaluate(
-          (ele) => Number(ele.innerHTML),
-          countEle
-        );
-        await myPage.waitForSelector(getPruductAddToCartBtn(1));
-        await page.screenshot({ path: "e2e/screenshots/add-to-cart1.png" });
-        await page.click(getPruductAddToCartBtn(1));
-        await page.screenshot({ path: "e2e/screenshots/add-to-cart2.png" });
-        await myPage.waitForSelector(getPruductSizeBtn(1));
-        await page.click(getPruductSizeBtn(1));
+        let total = 0;
+        let children = 0;
         /**
-         * 不暂停200毫秒，会导致下一个测试用例的购物车按钮点击没有效果
+         * 添加第一个商品的，第一个规格到购物车
          */
-        await sleep(200);
+        total++;
+        children++;
+        await addSomePruductToCart({ index: 1, sizeInde: 1 });
+        await expectCart({ children, total });
         /**
-         * waitFor is deprecated and will be removed in a future release
+         * 添加第一个商品的，第一个规格到购物车
          */
-        // await myPage.waitFor(200);
-        await page.screenshot({ path: "e2e/screenshots/add-to-cart3.png" });
-        const cur = await page.evaluate(
-          (ele) => Number(ele.innerHTML),
-          countEle
-        );
+        total++;
+        await addSomePruductToCart({ index: 1, sizeInde: 1 });
+        await expectCart({ children: 1, total });
+        /**
+         * 添加第一个商品的，第二个规格到购物车
+         */
+        total++;
+        children++;
+        await addSomePruductToCart({ index: 1, sizeInde: 2 });
+        await expectCart({ children: 2, total });
+        /**
+         * 添加第二个商品的，第一个规格到购物车
+         */
+        await addSomePruductToCart({ index: 2, sizeInde: 1 });
+        total++;
+        children++;
+        await expectCart({ children: 3, total });
 
-        expect(cur).toBe(pre + 1);
-        console.log("test add to cart end");
-        await sleep(200);
-      },
-      timeout
-    );
-
-    test(
-      "epxand and close cart_panel",
-      async () => {
-        console.log("begin test epxand and close cart_panel");
-        const testPanelStatus = async (expectStatus) => {
-          const status = await page.$eval(
-            ".cart_panel",
-            (el) => el.dataset.expand
-          );
-
-          // console.log({ status, expectStatus });
-          expect(status).toBe(expectStatus);
-        };
-
-        // await sleep(1000);
-        await testPanelStatus("false");
-        await myPage.waitForSelector(SHOW_CART_BTN);
-        const cartButton = await page.$(SHOW_CART_BTN);
-        await cartButton.click();
-        // await page.click(SHOW_CART_BTN);
-        await myPage.waitForSelector(SHOW_CART_BTN, { hidden: true });
-        await myPage.waitForSelector(HIDDEN_CART_BTN);
-        await sleep(1000);
-        await page.screenshot({
-          path: "e2e/screenshots/epxand-cart_panel.png",
-        });
-
-        // await myPage.waitForSelector(SHOW_CART_BTN, { hidden: true });
-        // await myPage.waitForSelector(HIDDEN_CART_BTN);
-
-        await testPanelStatus("true");
-        await page.click(HIDDEN_CART_BTN);
-        await sleep(1000);
-        await page.screenshot({
-          path: "e2e/screenshots/close-cart_panel.png",
-        });
-        await testPanelStatus("false");
-      },
-      timeout
-    );
-
-    test(
-      "test checkout",
-      async () => {
         await openCartPanel();
-        await myPage.waitForSelector(CHECKOUT_BTN);
-        await page.click(CHECKOUT_BTN);
-
-        const modalBtn =
-          ".ant-modal-content > .ant-modal-body > .ant-modal-confirm-body-wrapper > .ant-modal-confirm-btns > .ant-btn-primary";
-        await page.waitForSelector(modalBtn);
-        await page.click(modalBtn);
-
-        await sleep(200);
-        const arr = await page.$$(CART_ITEM);
-        expect(arr.length).toBe(0);
+        await page.screenshot({ path: "e2e/screenshots/cartitem-count1.png" });
       },
       timeout
     );

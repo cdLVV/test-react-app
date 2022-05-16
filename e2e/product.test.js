@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const puppeteer = require("puppeteer");
 
-const TARGET_URL = "http://localhost:3001";
+const TARGET_URL = "http://localhost:3001/test-react-app/";
 const width = 375;
 const height = 667;
 const isDebug = true;
@@ -15,29 +15,6 @@ const sleep = (time) => {
     setTimeout(resolve, time);
   });
 };
-
-/**
- * 获取第n个商品的加入购物车按钮
- * @param {number} index
- * @returns string
- */
-const getPruductAddToCartBtn = (index) =>
-  `#root .products-list > .product_item-index:nth-child(${index}) > .product_item_add_to_cart-btn`;
-/**
- * 获取当前商品的第n个size的元素
- * @param {number} index
- * @returns string
- */
-const getPruductSizeBtn = (index) =>
-  `.ant-drawer-content > .ant-drawer-wrapper-body > .ant-drawer-body .product_to_choose_size_item:nth-child(${index})`;
-/**
- * 显示购物车列表的按钮
- */
-const SHOW_CART_BTN = ".cart_panel-cartButton";
-/**
- * 收起购物车列表按钮
- */
-const HIDDEN_CART_BTN = ".cart_panel-closeBtn";
 
 /**
  * 获取大小尺码过滤按钮
