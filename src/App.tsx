@@ -103,14 +103,20 @@ export default function App() {
         visible={!!curProduct}
         onClose={() => setCurProduct(undefined)}
       >
-        <div className={styles.sizes} onClick={handleChooseSize}>
+        <div
+          className={`${styles.sizes} product_to_choose_size_container`}
+          onClick={handleChooseSize}
+        >
           {curProduct?.availableSizes.map((item) => (
-            <div key={item} data-size={item}>
+            <div key={item} className="product_to_choose_size_item" data-size={item}>
               {item}
             </div>
           ))}
         </div>
       </Drawer>
+      <div id="shopping-cart-count" className="hidden">
+        {count}
+      </div>
     </div>
   );
 }

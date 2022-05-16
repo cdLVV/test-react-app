@@ -12,14 +12,14 @@ interface Props {
 function CartButton(props: Props) {
   const { count, onClick, className } = props;
   return (
-    <div className={classNames(styles.cartBtn, className)} onClick={onClick}>
+    <button className={classNames(styles.cartBtn, className)} onClick={onClick}>
       <Badge
         showZero
         className={styles.badge}
         count={count}
         style={{ backgroundColor: "rgb(234, 191, 0)" }}
       />
-    </div>
+    </button>
   );
 }
 

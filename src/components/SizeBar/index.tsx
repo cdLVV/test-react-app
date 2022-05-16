@@ -1,4 +1,5 @@
 import { Size } from "@/api/shop";
+import { getStyleName } from "@/utils";
 import classNames from "classnames";
 import { memo, useCallback } from "react";
 import styles from "./index.module.less";
@@ -33,9 +34,14 @@ function SizeBar(props: Props) {
           <div
             key={item}
             data-size={item}
-            className={classNames(
-              styles.size,
-              checked.has(item) ? styles.checked : styles.notChecked
+            className={getStyleName(
+              "size-bar",
+              "item",
+              styles,
+              classNames(
+                styles.size,
+                checked.has(item) ? styles.checked : styles.notChecked
+              )
             )}
           >
             {item}

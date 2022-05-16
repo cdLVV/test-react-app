@@ -22,3 +22,12 @@ export function looseBody() {
   document.body.scrollTop = document.documentElement.scrollTop = -parseInt(top);
   body.style.top = "";
 }
+
+export function getStyleName(
+  prefix: string,
+  name: any,
+  styles: any,
+  others?: string
+) {
+  return `${prefix}-${name} ${styles[name] || ""}${others ? ` ${others}` : ""}`;
+}

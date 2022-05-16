@@ -48,8 +48,11 @@ export const requestProducts = createAsyncThunk(
   //发出一个请求，这里用的是axios
   // async (params) => await services.testApi(params),
   async (params: { sizes: Set<Size>; sort?: string }) => {
-    const res = await getProducts();
     const { sizes, sort } = params;
+    const res = await getProducts().setParams({
+      sizes: Array.from(sizes).join(","),
+      sort: sort,
+    });
 
     return new Promise<ProductItem[]>((resolve) => {
       setTimeout(() => {

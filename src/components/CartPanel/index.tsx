@@ -1,6 +1,6 @@
 import { Modal } from "antd";
 import classNames from "classnames";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { useAppDispatch } from "@/store/hooks";
 import {
   addProduct,
@@ -10,7 +10,7 @@ import {
   deleteAll,
   changePruductNumber,
 } from "@/store/slices/shopCartReducer";
-import { formatPrice } from "@/utils";
+import { formatPrice, getStyleName } from "@/utils";
 import CartButton from "../CartButton";
 import styles from "./index.module.less";
 import NumericInput from "./NumericInput ";
@@ -25,6 +25,8 @@ interface Props {
   onClose?: any;
   onExpand?: any;
 }
+
+const PREFIX = "cart_panel";
 
 function CartPanel(props: Props) {
   const {
@@ -72,33 +74,37 @@ function CartPanel(props: Props) {
       dispatch(changePruductNumber({ item, quantity })),
     [dispatch]
   );
+  const itemStyle = useMemo(() => getStyleName(PREFIX, "cartItem", styles), []);
   return (
     <>
       {isExpand && <div className={styles.mask} />}
       <div
-        className={classNames(styles.cartBtn, {
+        data-expand={isExpand}
+        className={classNames(styles.cartBtn, `${PREFIX}`, {
           [styles.show]: isExpand,
         })}
       >
         <CartButton
-          className={styles.cartButton}
+          className={getStyleName(PREFIX, "cartButton", styles)}
           count={count}
           onClick={onExpand}
         />
-        <button className={styles.closeBtn} onClick={onClose}>
+        <button
+          className={getStyleName(PREFIX, "closeBtn", styles)}
+          onClick={onClose}
+        >
           X
         </button>
         <header className={styles.header}>
           <CartButton
-            className={styles.cartButton2}
+            className={getStyleName(PREFIX, "cartButton2", styles)}
             count={count}
-            onClick={onExpand}
           />
           <span>Cart</span>
         </header>
-        <main className={styles.cartList}>
+        <main className={getStyleName(PREFIX, "cartList", styles)}>
           {list.map((item) => (
-            <div key={`${item.sku}-${item.size}`} className={styles.cartItem}>
+            <div key={`${item.sku}-${item.size}`} className={itemStyle}>
               <img className={styles.img} src={item.img1} alt={item.title} />
               <div className={styles.desc}>
                 <div>{item.title}</div>
@@ -113,18 +119,29 @@ function CartPanel(props: Props) {
                 )}`}</div>
                 <div>
                   <button
-                    className={styles.btn}
+                    className={getStyleName(
+                      PREFIX,
+                      "cartItem-subtract-btn",
+                      styles,
+                      styles.btn
+                    )}
                     disabled={item.quantity <= 1}
                     onClick={() => handleSubtractQuantity(item)}
                   >
                     -
                   </button>
                   <NumericInput
+                    className={`${PREFIX}-cartItem-quantity"`}
                     value={item.quantity}
                     onChange={handleChangePruductNumber(item)}
                   />
                   <button
-                    className={styles.btn}
+                    className={getStyleName(
+                      PREFIX,
+                      "cartItem-add-btn",
+                      styles,
+                      styles.btn
+                    )}
                     onClick={() => handleAddProduct(item)}
                   >
                     +
@@ -132,7 +149,12 @@ function CartPanel(props: Props) {
                 </div>
               </div>
               <button
-                className={styles.delBtn}
+                className={getStyleName(
+                  PREFIX,
+                  "cartItem-del-btn",
+                  styles,
+                  styles.delBtn
+                )}
                 onClick={() => handleSubtractProduct(item)}
               />
             </div>
@@ -161,7 +183,7 @@ function CartPanel(props: Props) {
             </div>
           </div>
           <button
-            className={styles.checkBtn}
+            className={getStyleName(PREFIX, "checkBtn", styles)}
             disabled={!count}
             onClick={handleClearAll}
           >

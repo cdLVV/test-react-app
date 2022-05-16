@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { memo, useCallback, useMemo } from "react";
 import { ProductItem } from "../../store/slices/productReducer";
-import { formatPrice } from "../../utils";
+import { formatPrice, getStyleName } from "../../utils";
 import LazyImage from "../LazyImage";
 import styles from "./index.module.less";
 
@@ -11,8 +11,10 @@ interface Props {
   onAddToCart?: any;
 }
 
+const PREFIX = "product_item";
+
 function Products(props: Props) {
-  const { className, data, onAddToCart } = props;
+  const { className = "", data, onAddToCart } = props;
   const {
     title,
     price,
@@ -28,7 +30,9 @@ function Products(props: Props) {
     onAddToCart && onAddToCart(data);
   }, [data, onAddToCart]);
   return (
-    <div className={classNames(className, styles.index)}>
+    <div
+      className={getStyleName(PREFIX, "index", styles, className)}
+    >
       {isFreeShipping && <div className={styles.free}>Free shipping</div>}
       <div
         className={classNames(styles.bg, styles.bg1, "h-[270px] sm:h-[320px]")}
@@ -61,7 +65,10 @@ function Products(props: Props) {
         </div>
       )}
       <div className={styles.grow} />
-      <button className={styles.btn} onClick={handleClick}>
+      <button
+        className={getStyleName(PREFIX + "_add_to_cart", "btn", styles)}
+        onClick={handleClick}
+      >
         Add to cart
       </button>
     </div>

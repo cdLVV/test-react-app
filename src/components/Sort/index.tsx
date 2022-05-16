@@ -1,4 +1,5 @@
 import { SortOptins } from "@/constants";
+import { getStyleName } from "@/utils";
 import { Popover } from "antd";
 import classNames from "classnames";
 import { memo, useCallback, useMemo, useState } from "react";
@@ -34,9 +35,14 @@ function Sort(props: Props) {
         <div
           key={item.value}
           data-sort={item.value}
-          className={classNames(
-            styles.sort,
-            checked === item.value ? styles.checked : styles.notChecked
+          className={getStyleName(
+            "sort-filter-item",
+            item.value || "normal",
+            styles,
+            classNames(
+              styles.sort,
+              checked === item.value ? styles.checked : styles.notChecked
+            )
           )}
         >
           {item.label}
@@ -61,7 +67,7 @@ function Sort(props: Props) {
         visible={visible}
         onVisibleChange={handleVisibleChange}
       >
-        <button className={styles.btn}>
+        <button className={getStyleName("sort-filter", "btn", styles)}>
           {checkedLabel}
           <i className="fa fa-angle-down fa-x" />
         </button>

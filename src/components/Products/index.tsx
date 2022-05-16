@@ -1,3 +1,4 @@
+import { getStyleName } from "@/utils";
 import classNames from "classnames";
 import { memo } from "react";
 import { RootState } from "../../store";
@@ -20,9 +21,11 @@ function Products(props: Props) {
         <div>{list.length} Product(s) found</div>
         <Sort onSortChange={onSortChange} checked={sort} />
       </div>
-      {list.map((item) => (
-        <Product key={item.sku} data={item} onAddToCart={onAddToCart} />
-      ))}
+      <div className={getStyleName("products", "list", styles)}>
+        {list.map((item) => (
+          <Product key={item.sku} data={item} onAddToCart={onAddToCart} />
+        ))}
+      </div>
     </div>
   );
 }
