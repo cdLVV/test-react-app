@@ -136,10 +136,10 @@ module.exports = (env) => ({
   },
   output: {
     path: paths.appBuild,
-    filename: isDev
+    filename: !isDev
       ? "static/js/[name].[contenthash:8].js"
       : "static/js/[name].bundle.js",
-    chunkFilename: isDev
+    chunkFilename: !isDev
       ? "static/js/[name].[contenthash:8].chunk.js"
       : "static/js/[name].chunk.js",
     assetModuleFilename: "static/media/[name].[hash][ext]",
