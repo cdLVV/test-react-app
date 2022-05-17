@@ -1,44 +1,18 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const puppeteer = require("puppeteer");
+const {
+  TARGET_URL,
+  WIDTH,
+  HEIGHT,
+  sleep,
+  timeout,
+  createWaitFor,
+  getSizeFilterBtn,
+  SORT_BTN,
+  PRICE_UP_SORT,
+  NORMAL_SORT,
+} = require("./utils");
 
-const TARGET_URL = "http://localhost:3001/test-react-app/";
-const width = 375;
-const height = 667;
-const isDebug = true;
-const timeout = isDebug ? 200000 : 20000;
-
-if (isDebug) {
-  jest.setTimeout(timeout);
-}
-const sleep = (time) => {
-  return new Promise((resolve) => {
-    setTimeout(resolve, time);
-  });
-};
-
-/**
- * 获取大小尺码过滤按钮
- * @param {number} index
- * @returns string
- */
-const getSizeFilterBtn = (index) => `#root .size-bar-item:nth-child(${index})`;
-
-const SORT_BTN = "#root .sort-filter-btn";
-const PRICE_UP_SORT =
-  ".ant-popover-content > .ant-popover-inner > .ant-popover-inner-content .sort-filter-item-priceUp";
-const NORMAL_SORT =
-  ".ant-popover-content > .ant-popover-inner > .ant-popover-inner-content .sort-filter-item-normal";
-
-const createWaitFor = (fn, page) => {
-  const returnFn = async function (...args) {
-    console.log(`${fn} is beginning`, args[0]);
-    const res = await page[fn].apply(page, args);
-    console.log(`${fn} is ended`);
-    return res;
-  };
-
-  return returnFn;
-};
 describe(
   "Test shopping page",
   () => {
@@ -82,7 +56,7 @@ describe(
       await page.goto(TARGET_URL, {
         waitUntil: "networkidle0", // networkidle2
       });
-      await page.setViewport({ width, height });
+      await page.setViewport({ width: WIDTH, height: HEIGHT });
       // page.on("console", (msg) => console.log("PAGE LOG:", msg.text()));
 
       myPage = [
@@ -101,6 +75,8 @@ describe(
     afterAll(async () => {
       await browser.close();
     });
+
+    // test("aaa", async () => {}, timeout);
 
     test(
       "test filter",

@@ -1,60 +1,21 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const puppeteer = require("puppeteer");
 
-const TARGET_URL = "http://localhost:3001/test-react-app/";
-const width = 375;
-const height = 667;
-const isDebug = true;
-const timeout = isDebug ? 200000 : 20000;
+const {
+  TARGET_URL,
+  WIDTH,
+  HEIGHT,
+  sleep,
+  timeout,
+  createWaitFor,
+  getPruductAddToCartBtn,
+  getPruductSizeBtn,
+  SHOW_CART_BTN,
+  HIDDEN_CART_BTN,
+  CART_ITEM,
+  CHECKOUT_BTN,
+} = require("./utils");
 
-if (isDebug) {
-  jest.setTimeout(timeout);
-}
-const sleep = (time) => {
-  return new Promise((resolve) => {
-    setTimeout(resolve, time);
-  });
-};
-
-/**
- * 获取第n个商品的加入购物车按钮
- * @param {number} index
- * @returns string
- */
-const getPruductAddToCartBtn = (index) =>
-  `#root .products-list > .product_item-index:nth-child(${index}) > .product_item_add_to_cart-btn`;
-/**
- * 获取当前商品的第n个size的元素
- * @param {number} index
- * @returns string
- */
-const getPruductSizeBtn = (index) =>
-  `.ant-drawer-content > .ant-drawer-wrapper-body > .ant-drawer-body .product_to_choose_size_item:nth-child(${index})`;
-/**
- * 显示购物车列表的按钮
- */
-const SHOW_CART_BTN = ".cart_panel-cartButton";
-/**
- * 收起购物车列表按钮
- */
-const HIDDEN_CART_BTN = ".cart_panel-closeBtn";
-/**
- * 购物车列表
- */
-const CART_LIST = ".cart_panel-cartList";
-const CART_ITEM = ".cart_panel-cartList > .cart_panel-cartItem";
-const CHECKOUT_BTN = ".cart_panel-checkBtn";
-
-const createWaitFor = (fn, page) => {
-  const returnFn = async function (...args) {
-    console.log(`${fn} is beginning`, args[0]);
-    const res = await page[fn].apply(page, args);
-    console.log(`${fn} is ended`);
-    return res;
-  };
-
-  return returnFn;
-};
 describe(
   "Test shopping page",
   () => {
@@ -63,15 +24,6 @@ describe(
     let context;
 
     let myPage;
-
-    const addSomePruductToCart = async ({ index, sizeInde }) => {
-      const prudoct = getPruductAddToCartBtn(index);
-      const size = getPruductSizeBtn(sizeInde);
-      await myPage.waitForSelector(prudoct);
-      await page.click(prudoct);
-      await myPage.waitForSelector(size);
-      await page.click(size);
-    };
 
     const openCartPanel = async () => {
       await myPage.waitForSelector(SHOW_CART_BTN);
@@ -93,7 +45,7 @@ describe(
       await page.goto(TARGET_URL, {
         waitUntil: "networkidle0", // networkidle2
       });
-      await page.setViewport({ width, height });
+      await page.setViewport({ width: WIDTH, height: HEIGHT });
       // page.on("console", (msg) => console.log("PAGE LOG:", msg.text()));
 
       myPage = [

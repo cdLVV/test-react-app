@@ -131,7 +131,7 @@ function CartPanel(props: Props) {
                     -
                   </button>
                   <NumericInput
-                    className={`${PREFIX}-cartItem-quantity"`}
+                    className={`${PREFIX}-cartItem-quantity`}
                     value={item.quantity}
                     onChange={handleChangePruductNumber(item)}
                   />

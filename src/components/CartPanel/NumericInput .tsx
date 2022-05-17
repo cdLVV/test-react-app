@@ -6,14 +6,14 @@ const NumericInput = (props: any) => {
   const [realValue, setRealValue] = useState(value);
   const handleChange = useCallback((e: any) => {
     const { value: val } = e.target;
-    const reg = /^-?\d*$/;
+    const reg = /^[1-9]\d*$/;
     if ((!isNaN(val) && reg.test(val)) || val === "") {
       setRealValue(val);
     }
   }, []);
 
   const handleBlur = useCallback(() => {
-    onChange(Number(realValue));
+    onChange(Number(realValue) || 1);
   }, [onChange, realValue]);
 
   useEffect(() => {
