@@ -485,6 +485,7 @@ html {
 }
 .App-module__app--aqAx3 .App-module__loading--iTEXU {
   left: 0px;
+  z-index: 10;
 }
 @media (min-width: 640px) {
   .App-module__app--aqAx3 .App-module__loading--iTEXU {

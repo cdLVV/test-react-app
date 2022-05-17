@@ -20,6 +20,12 @@ import styles2 from "./variables.less";
 console.log({ styles2 });
 console.log({ styles });
 
+// const aaa = import(/* webpackChunkName: "aaa" */ "./a").then(() => {
+//   console.log("加载完成");
+// });
+
+// console.log({ aaa });
+
 export default function App() {
   const { shopCart, product } = useAppSelector((state) => state);
   const { loading, products, sizes, allSize, sort } = product;
@@ -108,7 +114,11 @@ export default function App() {
           onClick={handleChooseSize}
         >
           {curProduct?.availableSizes.map((item) => (
-            <div key={item} className="product_to_choose_size_item" data-size={item}>
+            <div
+              key={item}
+              className="product_to_choose_size_item"
+              data-size={item}
+            >
               {item}
             </div>
           ))}

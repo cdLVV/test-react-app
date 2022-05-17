@@ -4,7 +4,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const BundleAnalyzerPlugin =
   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+// const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
 
@@ -144,6 +144,7 @@ module.exports = (env) => ({
       : "static/js/[name].chunk.js",
     assetModuleFilename: "static/media/[name].[hash][ext]",
     publicPath: paths.publicUrlOrPath,
+    clean: !isDev,
   },
   module: {
     rules: [
@@ -269,7 +270,7 @@ module.exports = (env) => ({
         ...env,
       }),
     }),
-    !isDev && new CleanWebpackPlugin(),
+    // !isDev && new CleanWebpackPlugin(),
     process.env.ANALYZER && new BundleAnalyzerPlugin(),
     new ESLintPlugin({
       extensions: ["js", "mjs", "jsx", "ts", "tsx"],
